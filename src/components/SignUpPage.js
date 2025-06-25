@@ -26,7 +26,8 @@ function SignupPage() {
                 throw new Error("Passwords do not match");
             }
 
-            const response = await axios.post('http://localhost:8080/test/saveUser', {
+            // const response = await axios.post('http://localhost:8080/test/saveUser', {
+                 const response = await axios.get('https://vbr-office-backend.onrender.com/test/saveUser',{
                 username,
                 password,
             });

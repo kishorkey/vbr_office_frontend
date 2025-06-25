@@ -32,14 +32,16 @@ function LoginPage() {
                 return;
             }
             console.log('working..');
-            const response = await axios.get('http://192.168.0.2:8080/test/login', {
+            // const response = await axios.get('http://192.168.0.2:8080/test/login', {
+                  const response = await axios.get('https://vbr-office-backend.onrender.com/test/login', {
                 params: {
                     username:username,
                   password:encrypted,
                 },
               });
                 if(response.data == 'Login Successfull'){
-                    const responseUser = await axios.get('http://192.168.0.2:8080/test/getUserroles', {
+                    // const responseUser = await axios.get('http://192.168.0.2:8080/test/getUserroles', {
+                          const responseUser = await axios.get('https://vbr-office-backend.onrender.com/test/getUserroles', {
                         params: {
                             username:username,
                         },
