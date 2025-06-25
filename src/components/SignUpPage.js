@@ -27,7 +27,7 @@ function SignupPage() {
             }
 
             // const response = await axios.post('http://localhost:8080/test/saveUser', {
-                 const response = await axios.get('https://vbr-office-backend.onrender.com/test/saveUser',{
+                 const response = await axios.post('https://vbr-office-backend.onrender.com/test/saveUser',{
                 username,
                 password,
             });
