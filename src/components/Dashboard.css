@@ -1,0 +1,71 @@
+.WelcomeDashboard{
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header {
+    /* background-color:#0dcaf0; */
+    height: 157px;
+    background-image: url('VBR_logo.png');
+    background-repeat: no-repeat;
+  background-attachment: fixed; 
+  background-size: 100% 17%;
+    color: white;
+    /* padding: 20px; */
+    /* text-align: center; */
+  }
+
+  .headercard{
+    /* display: flex;
+    justify-content: space-between; 
+    align-items: end; */
+     margin-top: 82px; 
+    /* align-items: center; */
+    float: right;
+    /* margin-right: 9px; */
+  }
+
+  /* .Title{
+    color: gold;
+    margin-left: 435px;
+  } */
+
+  .usernameclass{
+    margin-bottom: 0rem;
+    color: black;
+    font-size: 20px;
+  }
+
+  .button{
+    background-color: #000;
+    color:goldenrod;
+  }
+
+  .navcard{
+    padding-top: 130px;
+  }
+
+  .navcard nav a {
+    color: rgb(7, 7, 7);
+    margin: 0 30px;
+    text-decoration: none;
+  }
+  
+  .main-content {
+    padding: 40px 20px;
+  }
+  
+  .main-content section {
+    margin-bottom: 40px;
+  }
+  
+  .footer {
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+    margin-top: 161px;
+  }
+  
