@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./NewUser.css";
 
 const NewUser = () => {
   const [username, setUsername] = useState("");
@@ -88,70 +89,69 @@ const handleSendMail = async () => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto", padding: "2rem" }}>
-      <h2>Email OTP Verification</h2>
-      <input
-        type="text"
-        placeholder="Enter Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        style={{ display: "block", width: "100%", marginBottom: "1rem" }}
-      />
-      <input
-        type="email"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={{ display: "block", width: "100%", marginBottom: "1rem" }}
-      />
-      <button onClick={handleSendMail} style={{ marginBottom: "1rem" }}>
-        Send Mail
-      </button>
+     <div className="new-user-container">
+      <h2 className="new-user-title">Create Account In VBR Associates</h2>
+
+      <div className="new-user-form">
+        <input
+          type="text"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="new-user-input"
+        />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="new-user-input"
+        />
+        <button onClick={handleSendMail} className="new-user-button">
+          Send Mail
+        </button>
+      </div>
 
       {otpSent && !otpVerified && (
-        <>
+        <div className="new-user-form">
           <input
             type="text"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             maxLength={6}
-            style={{ display: "block", width: "100%", marginBottom: "1rem" }}
+            className="new-user-input"
           />
-          <button onClick={verifyOtp} style={{ marginBottom: "1rem" }}>
+          <button onClick={verifyOtp} className="new-user-button">
             Verify OTP
           </button>
-        </>
+        </div>
       )}
 
       {showPassword && (
-        <>
+        <div className="new-user-form">
           <input
             type="password"
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ display: "block", width: "100%", marginBottom: "1rem" }}
+            className="new-user-input"
           />
           <input
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={{ display: "block", width: "100%", marginBottom: "1rem" }}
+            className="new-user-input"
           />
-          {error && (
-            <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>
-          )}
-          <button onClick={handleSubmit}>
+          {error && <div className="new-user-error">{error}</div>}
+          <button onClick={handleSubmit} className="new-user-button">
             Submit
           </button>
-        </>
+        </div>
       )}
 
-      {error && !showPassword && (
-        <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>
-      )}
+      {error && !showPassword && <div className="new-user-error">{error}</div>}
     </div>
   );
 };
