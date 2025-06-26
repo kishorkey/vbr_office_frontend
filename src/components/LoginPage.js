@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MDBContainer, MDBInput, MDBBtn, } from 'mdb-react-ui-kit';
 import CryptoJS from 'crypto-js';
 import './LoginPage.css';
+import { API } from '../constants/api';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -34,7 +35,7 @@ function LoginPage() {
                 return;
             }
             console.log('working..');
-            const response = await axios.get('http://localhost:8080/test/login', {
+            const response = await axios.get(API.LOGIN, {
                 //   const response = await axios.get('https://vbr-office-backend.onrender.com/test/login', {
                 params: {
                     username: username,
@@ -42,7 +43,7 @@ function LoginPage() {
                 },
             });
             if (response.data == 'Login Successfull') {
-                const responseUser = await axios.get('http://localhost:8080/test/getUserroles', {
+                const responseUser = await axios.get(API.GET_USER_ROLES, {
                     //   const responseUser = await axios.get('https://vbr-office-backend.onrender.com/test/getUserroles', {
                     params: {
                         username: username,

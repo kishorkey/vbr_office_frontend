@@ -6,6 +6,7 @@ import {
     MDBInput,
     MDBBtn,
 } from 'mdb-react-ui-kit';
+import { API } from '../constants/api';
 
 function ResetPassword() {
     const [username, setFullName] = useState('');
@@ -32,7 +33,7 @@ function ResetPassword() {
             }
 
             // const response = await axios.post('http://192.168.0.2:8080/test/saveUser', {
-                const response = await axios.post('https://vbr-office-backend.onrender.com/test/saveUser', {
+                const response = await axios.post(API.SAVE_USER, {
                 username,
                 password,
             });

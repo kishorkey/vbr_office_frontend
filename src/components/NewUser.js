@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./NewUser.css";
+import { API } from '../constants/api';
 
 const NewUser = () => {
   const [username, setUsername] = useState("");
@@ -15,7 +16,7 @@ const NewUser = () => {
 const handleSendMail = async () => {
   if (email && username) {
     try {
-      const response = await fetch("http://localhost:8080/test/createUser", {
+      const response = await fetch(API.CREATE_USER, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +49,7 @@ const handleSendMail = async () => {
 
   const verifyOtp = async () => {
   try {
-    const response = await fetch(`http://localhost:8080/test/verifyUser?otp=${otp}`, {
+    const response = await fetch(API.VERIFY_USER+ `?otp=${otp}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,6 +76,24 @@ const handleSendMail = async () => {
     console.error("OTP verification failed", err);
     setError("Failed to verify OTP");
   }
+//  try {
+//   const response = await axios.post('https://vbr-office-backend.onrender.com/test/saveUser',{
+//     method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//      body: JSON.stringify({
+//           username: username,
+//           password: email,
+//           status: ""
+//         }),
+//     });
+
+//     catch (err) {
+//     console.error("OTP verification failed", err);
+//     setError("Failed to verify OTP");
+//   }
+
 };
 
 
