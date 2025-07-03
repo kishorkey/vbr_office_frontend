@@ -70,7 +70,7 @@ function LoginPage() {
     return (
         <div className="login-wrapper">
             <div className="login-page-container">
-                <h2 className="mb-4 text-center">VBR Associates Login</h2>
+                <h2 className="login-title">VBR Associates Login</h2>
                 <div className="login-user-form">
                     <input
                         type="email"

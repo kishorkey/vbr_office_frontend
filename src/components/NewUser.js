@@ -49,7 +49,7 @@ const handleSendMail = async () => {
 
   const verifyOtp = async () => {
   try {
-    const response = await fetch(API.VERIFY_USER+ `?otp=${otp}`, {
+    const response = await fetch(API.VERIFY_USER+ `otp=${otp}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
