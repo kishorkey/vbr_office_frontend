@@ -1,82 +1,179 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useHistory hook
-import {
-    MDBContainer,
-    MDBInput,
-    MDBBtn,
-} from 'mdb-react-ui-kit';
+import React, { useState } from "react";
+import "./NewUser.css";
 import { API } from '../constants/api';
 
-function ResetPassword() {
-    const [username, setFullName] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState(''); // State to manage error messages
-    const history = useNavigate(); // Get the history object for redirection
+const NewUser = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
+
+const handleSendMail = async () => {
+  if (email && username) {
+    try {
+      const response = await fetch(API.CREATE_USER, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          status: ""
+        }),
+      });
+
+      if (response.ok) {
+        // only parse JSON if there's content
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : {};
+        console.log("User created and OTP sent:", data);
+        setOtpSent(true);
+        setError("");
+      } else {
+        setError("Failed to create user");
+      }
+    } catch (err) {
+      console.error("Sending OTP failed", err);
+      setError("Failed to create user");
+    }
+  } else {
+    setError("Username and Email are required");
+  }
+};
+
+  const verifyOtp = async () => {
+  try {
+    const response = await fetch(API.VERIFY_USER+ `otp=${otp}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+     body: JSON.stringify({
+          username: username,
+          email: email,
+          status: ""
+        }),
+    });
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
+
+    if (response.ok && data.success !== false) {
+      console.log("OTP Verified Successfully");
+      setShowPassword(true);
+      setOtpVerified(true);
+      setError("");
+    } else {
+      setError(data.message || "Invalid OTP");
+    }
+  } catch (err) {
+    console.error("OTP verification failed", err);
+    setError("Failed to verify OTP");
+  }
+//  try {
+//   const response = await axios.post('https://vbr-office-backend.onrender.com/test/saveUser',{
+//     method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//      body: JSON.stringify({
+//           username: username,
+//           password: email,
+//           status: ""
+//         }),
+//     });
+
+//     catch (err) {
+//     console.error("OTP verification failed", err);
+//     setError("Failed to verify OTP");
+//   }
+
+};
 
 
-      const [showText, setShowText] = useState(false);
-      
-    const handleSignup = async () => {
-        try {
-            setShowText(!showText)
-            // 
-            // Check for empty fields
-            if (!username || !password || !confirmPassword ) {
-                setError('Please fill in all fields.');
-                return;
-            }
+  const handleSubmit = () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+    } else {
+      setError("");
+      console.log("Password set successfully");
+      // Proceed with form submission logic
+       history('/login');
+    }
+  };
 
-            if (password !== confirmPassword) {
-                throw new Error("Passwords do not match");
-            }
+  return (
+     <div className="new-user-container">
+      <h2 className="new-user-title">Reset Password</h2>
 
-            // const response = await axios.post('http://192.168.0.2:8080/test/saveUser', {
-                const response = await axios.post(API.SAVE_USER, {
-                username,
-                password,
-            });
-            // Handle successful signup
-            console.log(response.data);
-            // history('/');
-        } catch (error) {
-            // Handle signup error
-            console.error('Signup failed:', error.response ? error.response.data : error.message);
-            setError(error.response ? error.response.data : error.message);
-        }
-    };
+      <div className="new-user-form">
+        <input
+          type="text"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="new-user-input"
+        />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="new-user-input"
+        />
+        <button onClick={handleSendMail} className="new-user-button">
+          Send Mail
+        </button>
+      </div>
 
-    return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="border rounded-lg p-4" style={{width: '600px', height: 'auto'}}>
-                <MDBContainer className="p-3">
-                    <h2 className="mb-4 text-center">Reset Password</h2>
-                    {/* Render error message if exists */}
-                    {error && <p className="text-danger">{error}</p>}
-                    <MDBInput wrapperClass='mb-3' id='fullName' placeholder={"Full Name"} value={username} type='text'
-                              onChange={(e) => setFullName(e.target.value)}/>
-                    <MDBInput wrapperClass='mb-3' placeholder='Password' id='password' type='password' value={password}
-                              onChange={(e) => setPassword(e.target.value)}/>
-                    <MDBInput wrapperClass='mb-3' placeholder='Confirm Password' id='confirmPassword' type='password'
-                              value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}/>
-                    <button className="mb-4 d-block mx-auto fixed-action-btn btn-primary"
-                            style={{height: '40px', width: '100%'}}
-                            onClick={handleSignup} >Reset
-                    </button>
-                    <p >
-                    {showText && <div>Reset success</div>}
-                    </p>
-
-                    <div className="text-center">
-                        <p>login? <a href="/">Login</a></p>
-                    </div>
-
-                </MDBContainer>
-            </div>
+      {otpSent && !otpVerified && (
+        <div className="new-user-form">
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            maxLength={6}
+            className="new-user-input"
+          />
+          <button onClick={verifyOtp} className="new-user-button">
+            Verify OTP
+          </button>
         </div>
-    );
-}
+      )}
 
-export default ResetPassword;
+      {showPassword && (
+        <div className="new-user-form">
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="new-user-input"
+          />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="new-user-input"
+          />
+          {error && <div className="new-user-error">{error}</div>}
+          <button onClick={handleSubmit} className="new-user-button">
+            Reset
+          </button>
+        </div>
+      )}
+
+      {error && !showPassword && <div className="new-user-error">{error}</div>}
+    </div>
+  );
+};
+
+export default NewUser;

@@ -104,6 +104,7 @@ const handleSendMail = async () => {
       setError("");
       console.log("Password set successfully");
       // Proceed with form submission logic
+       history('/login');
     }
   };
 
