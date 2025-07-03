@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./NewUser.css";
 import { API } from '../constants/api';
+import { useNavigate } from 'react-router-dom';
 
 const NewUser = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +13,7 @@ const NewUser = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
+  const history = useNavigate();
 
 const handleSendMail = async () => {
   if (email && username) {
