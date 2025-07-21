@@ -8,6 +8,9 @@ function ClientManagement() {
   const [subType, setSubType] = useState('');
   const [clientName, setClientName] = useState('');
   const [clientData, setClientData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize] = useState(5); // can be made dynamic later
 
   const caseTypes = {
     Civil: ['Property Disputes', 'Contract Disputes', 'Family Law', 'Consumer Protection'],
@@ -20,26 +23,28 @@ function ClientManagement() {
     Others: ['Cyber Law', 'Education Law', 'Banking Law']
   };
 
-  // 🔹 Fetch all clients initially (GET_ClientS)
-  const fetchAllClients = async () => {
+  // 🔹 Fetch all clients initially
+  const fetchAllClients = async (page = 0) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(API.GET_ClientS, {
+        params: { page, size: pageSize },
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true,
+          'Content-Type': 'application/json'
+        }
       });
 
-      setClientData(response.data);
+      setClientData(response.data.content);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(response.data.number);
     } catch (error) {
       console.error('Failed to fetch all clients:', error);
     }
   };
 
-  // 🔹 Fetch filtered clients on search
-  const fetchFilteredClients = async () => {
+  // 🔹 Fetch clients based on filters
+  const fetchFilteredClients = async (page = 0) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(API.FILTER_CLIENTS, {
@@ -47,25 +52,35 @@ function ClientManagement() {
           name: clientName,
           category: caseCategory,
           subtype: subType,
+          page,
+          size: pageSize
         },
         headers: {
           Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
+        }
       });
 
-      setClientData(response.data);
+      setClientData(response.data.content);
+      setTotalPages(response.data.totalPages);
+      setCurrentPage(response.data.number);
     } catch (error) {
       console.error('Failed to fetch filtered clients:', error);
     }
   };
 
-  // 🔹 Initial fetch
+  // 🔹 Detect search/filter changes
+  const handleSearch = () => {
+    if (clientName || caseCategory || subType) {
+      fetchFilteredClients(0);
+    } else {
+      fetchAllClients(0);
+    }
+  };
+
   useEffect(() => {
-    fetchAllClients();
+    fetchAllClients(0);
   }, []);
 
-  // 🔹 File download handler
   const downloadFile = (file) => {
     const byteCharacters = atob(file.data);
     const byteNumbers = Array.from(byteCharacters).map(c => c.charCodeAt(0));
@@ -109,12 +124,12 @@ function ClientManagement() {
           </select>
         )}
 
-        <button onClick={fetchFilteredClients}>Search</button>
+        <button onClick={handleSearch}>Search</button>
       </div>
 
-      <div style={{ display: 'grid', gap: '30px' }}>
+      <div className="clients-grid">
         {clientData.map((client) => (
-          <div key={client.user_Id} className="client-card">
+          <div key={client.userId} className="client-card">
             <h3>{client.username}</h3>
             <p><strong>Contact:</strong> {client.number}</p>
             <p><strong>Category:</strong> {client.categoryName || client.category?.categoryName || 'N/A'}</p>
@@ -123,7 +138,7 @@ function ClientManagement() {
             <h4>Files</h4>
             {client.files?.length > 0 ? (
               <ul className="files-list">
-                {client.files.map(file => (
+                {client.files.map((file) => (
                   <li key={file.id}>
                     📎 {file.fileName}
                     <button onClick={() => downloadFile(file)} className="download-btn">Download</button>
@@ -134,6 +149,27 @@ function ClientManagement() {
           </div>
         ))}
       </div>
+
+      {/* 🔹 Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                if (clientName || caseCategory || subType) {
+                  fetchFilteredClients(i);
+                } else {
+                  fetchAllClients(i);
+                }
+              }}
+              className={currentPage === i ? 'active' : ''}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
