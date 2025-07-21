@@ -1,22 +1,28 @@
 import React from 'react';
 import { useNavigate} from 'react-router-dom'; // Import useHistory hook
-import axios from 'axios';
+
 
 import './Dashboard.css';
 
 function WelcomeDashboard({ username }) {
 
     const history = useNavigate();
+    const navigate = useNavigate();
     let user ;
-
+  console.log(localStorage.getItem('role'));
     const handleLogout = async () => {
 
         localStorage.removeItem("Name");
         localStorage.removeItem("role");
-        
+         localStorage.clear();
         history('/');
+         window.location.href = "/";
  
     };
+
+     const goToClientScreen = () => {
+    navigate('/clients'); // ✅ Use this function to go to the client screen
+  };
 
   return (
     <div className="WelcomeDashboard">
@@ -33,6 +39,11 @@ function WelcomeDashboard({ username }) {
           <a href="#about">About</a>
           <a href="#features">Features</a>
           <a href="#contact">Contact</a>
+    {
+        JSON.parse(localStorage.getItem('role') || '[]').includes('ADMIN') && (
+          <button onClick={goToClientScreen} className="button">Client Tab</button>
+        )
+      }
         </nav>
         </div>
       </header>

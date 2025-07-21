@@ -6,6 +6,8 @@ import Dashboard from "./components/Dashboard";
 import SignupPage from "./components/SignUpPage";
 import ResetPassword from "./components/ResetPassword";
 import NewUser from "./components/NewUser";
+import ClientPage from './components/ClientPage';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
@@ -16,7 +18,12 @@ function App() {
 
         <Routes>
             <Route path="/" element={<LoginPage/>} />
-            <Route path = "/dashboard" element={<Dashboard/>}/>
+            <Route path = "/dashboard" element={<ProtectedRoute>
+              <Dashboard/>
+            </ProtectedRoute>}/>
+             <Route path="/clients" element={<ProtectedRoute>
+              <ClientPage />
+            </ProtectedRoute>} />
             <Route path="/newuser" element={ <NewUser/>} />
             <Route path="/signup" element={ <SignupPage/>} />
             <Route path="/reset" element={ <ResetPassword/>} />

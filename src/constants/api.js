@@ -7,6 +7,9 @@ export const API = {
   SAVE_USER: `${BASE_URL}/saveUser`,
   CREATE_USER: `${BASE_URL}/createUser`,
   VERIFY_USER: `${BASE_URL}/verifyUser?`,
+  GET_ClientS: `${BASE_URL}/getClients?`,
+  FILTER_CLIENTS:`${BASE_URL}/searchClient?`,
+   
  
   // Add more as needed...
 };

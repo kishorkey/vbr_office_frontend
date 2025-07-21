@@ -49,66 +49,74 @@ const handleSendMail = async () => {
   }
 };
 
-  const verifyOtp = async () => {
+ const verifyOtp = async () => {
   try {
-    const response = await fetch(API.VERIFY_USER+ `otp=${otp}`, {
+    const response = await fetch(API.VERIFY_USER + `otp=${otp}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-     body: JSON.stringify({
-          username: username,
-          email: email,
-          status: ""
-        }),
+      body: JSON.stringify({
+        username: username,
+        email: email,
+        status: ""
+      }),
     });
 
     const text = await response.text();
-    const data = text ? JSON.parse(text) : {};
+    const isVerified = text === "true"; // Backend returns boolean as plain text
 
-    if (response.ok && data.success !== false) {
+    if (response.ok && isVerified) {
       console.log("OTP Verified Successfully");
       setShowPassword(true);
       setOtpVerified(true);
       setError("");
     } else {
-      setError(data.message || "Invalid OTP");
+      setError("Invalid OTP");
     }
   } catch (err) {
     console.error("OTP verification failed", err);
     setError("Failed to verify OTP");
   }
-//  try {
-//   const response = await axios.post('https://vbr-office-backend.onrender.com/test/saveUser',{
-//     method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//      body: JSON.stringify({
-//           username: username,
-//           password: email,
-//           status: ""
-//         }),
-//     });
-
-//     catch (err) {
-//     console.error("OTP verification failed", err);
-//     setError("Failed to verify OTP");
-//   }
 
 };
 
 
-  const handleSubmit = () => {
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
+const saveUser = async () => {
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  setError(""); // clear previous errors
+
+  try {
+    const response = await fetch(API.SAVE_USER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: confirmPassword,
+        status: ""
+      }),
+    });
+
+    if (response.ok) {
+      console.log("User saved successfully");
+      history('/'); // redirect only if save is successful
     } else {
-      setError("");
-      console.log("Password set successfully");
-      // Proceed with form submission logic
-       history('/');
+      const text = await response.text();
+      setError(text || "Failed to save user");
     }
-  };
+
+  } catch (err) {
+    console.error("Save user failed", err);
+    setError("Something went wrong while saving user");
+  }
+};
+
 
   return (
      <div className="new-user-container">
@@ -167,7 +175,7 @@ const handleSendMail = async () => {
             className="new-user-input"
           />
           {error && <div className="new-user-error">{error}</div>}
-          <button onClick={handleSubmit} className="new-user-button">
+          <button onClick={saveUser} className="new-user-button">
             Reset
           </button>
         </div>

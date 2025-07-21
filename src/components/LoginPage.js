@@ -50,8 +50,13 @@ function LoginPage() {
                     },
                 });
                 console.log(response.data);
+                console.log(responseUser.data);
+                
+                
+
                 localStorage.setItem('Name', responseUser.data.username);
-                localStorage.setItem('role', responseUser.data.roles[0]);
+                localStorage.setItem('token', responseUser.data.token);
+                localStorage.setItem('role', JSON.stringify(responseUser.data.role[0])); //
                 history('/dashboard');
             }
             else {
