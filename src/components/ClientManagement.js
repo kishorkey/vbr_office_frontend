@@ -4,13 +4,13 @@ import { API } from '../constants/api';
 import './ClientManagement.css';
 
 function ClientManagement() {
+  const [clientName, setClientName] = useState('');
   const [caseCategory, setCaseCategory] = useState('');
   const [subType, setSubType] = useState('');
-  const [clientName, setClientName] = useState('');
   const [clientData, setClientData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageSize] = useState(5); // can be made dynamic later
+  const pageSize = 10;
 
   const caseTypes = {
     Civil: ['Property Disputes', 'Contract Disputes', 'Family Law', 'Consumer Protection'],
@@ -23,68 +23,35 @@ function ClientManagement() {
     Others: ['Cyber Law', 'Education Law', 'Banking Law']
   };
 
-  // 🔹 Fetch all clients initially
-  const fetchAllClients = async (page = 0) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(API.GET_ClientS, {
-        params: { page, size: pageSize },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+  const fetchClients = async (page = 0) => {
+    const token = localStorage.getItem('token');
+    const params = {
+      name: clientName || null,
+      category: caseCategory || null,
+      subtype: subType || null,
+      page,
+      size: pageSize,
+    };
 
-      setClientData(response.data.content);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.number);
-    } catch (error) {
-      console.error('Failed to fetch all clients:', error);
-    }
-  };
-
-  // 🔹 Fetch clients based on filters
-  const fetchFilteredClients = async (page = 0) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(API.FILTER_CLIENTS, {
-        params: {
-          name: clientName,
-          category: caseCategory,
-          subtype: subType,
-          page,
-          size: pageSize
-        },
+        params,
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
 
       setClientData(response.data.content);
       setTotalPages(response.data.totalPages);
       setCurrentPage(response.data.number);
-    } catch (error) {
-      console.error('Failed to fetch filtered clients:', error);
+    } catch (err) {
+      console.error('Client fetch failed', err);
     }
   };
-
-  // 🔹 Detect search/filter changes
-  const handleSearch = () => {
-    if (clientName || caseCategory || subType) {
-      fetchFilteredClients(0);
-    } else {
-      fetchAllClients(0);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllClients(0);
-  }, []);
 
   const downloadFile = (file) => {
     const byteCharacters = atob(file.data);
-    const byteNumbers = Array.from(byteCharacters).map(c => c.charCodeAt(0));
-    const byteArray = new Uint8Array(byteNumbers);
+    const byteArray = new Uint8Array([...byteCharacters].map(c => c.charCodeAt(0)));
     const blob = new Blob([byteArray], { type: file.fileType });
     const url = URL.createObjectURL(blob);
 
@@ -92,84 +59,89 @@ function ClientManagement() {
     a.href = url;
     a.download = file.fileName;
     a.click();
-
     URL.revokeObjectURL(url);
   };
 
-  return (
-    <div className="container">
-      <h2 className="title">Client Management</h2>
+  useEffect(() => {
+    fetchClients(0);
+  }, []);
 
+  return (
+    <div className="client-management">
       <div className="filter-section">
         <input
           type="text"
-          placeholder="Search by client name"
+          placeholder="Search by name"
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
         />
 
         <select value={caseCategory} onChange={(e) => { setCaseCategory(e.target.value); setSubType(''); }}>
           <option value="">-- Select Category --</option>
-          {Object.keys(caseTypes).map((category, index) => (
-            <option key={index} value={category}>{category}</option>
+          {Object.keys(caseTypes).map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
 
         {caseCategory && (
           <select value={subType} onChange={(e) => setSubType(e.target.value)}>
             <option value="">-- Select Sub-Type --</option>
-            {caseTypes[caseCategory].map((sub, idx) => (
-              <option key={idx} value={sub}>{sub}</option>
+            {caseTypes[caseCategory].map((sub, i) => (
+              <option key={i} value={sub}>{sub}</option>
             ))}
           </select>
         )}
 
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={() => fetchClients(0)}>Search</button>
       </div>
 
       <div className="clients-grid">
-        {clientData.map((client) => (
-          <div key={client.userId} className="client-card">
-            <h3>{client.username}</h3>
-            <p><strong>Contact:</strong> {client.number}</p>
-            <p><strong>Category:</strong> {client.categoryName || client.category?.categoryName || 'N/A'}</p>
-            <p><strong>Sub-Type:</strong> {client.subtypeName || client.subType?.name || 'N/A'}</p>
+        {clientData.map(client => (
+          <div className="client-card" key={client.userId}>
+  <div className="client-header">
+    <h3>{client.username}</h3>
+    <span className="client-contact">📞 {client.number}</span>
+  </div>
 
-            <h4>Files</h4>
-            {client.files?.length > 0 ? (
-              <ul className="files-list">
-                {client.files.map((file) => (
-                  <li key={file.id}>
-                    📎 {file.fileName}
-                    <button onClick={() => downloadFile(file)} className="download-btn">Download</button>
-                  </li>
-                ))}
-              </ul>
-            ) : <p>No files available.</p>}
-          </div>
+  <div className="client-info">
+    <p><strong>Category:</strong> {client.categoryName || 'N/A'}</p>
+    <p><strong>Sub-Type:</strong> {client.subtypeName || 'N/A'}</p>
+  </div>
+
+  <div className="client-files">
+    <div className="files-header">
+  <span className="icon">📁</span>
+  <span>Files</span>
+</div>
+    {client.files?.length ? (
+      <div className="file-list">
+  {client.files.map(file => (
+    <div className="file-item" key={file.id}>
+      📎 {file.fileName}
+      <button className="download-btn" onClick={() => downloadFile(file)}>Download</button>
+    </div>
+  ))}
+</div>
+    ) : (
+      <p className="no-files">No files</p>
+    )}
+  </div>
+</div>
+
         ))}
       </div>
 
-      {/* 🔹 Pagination */}
-      {totalPages > 1 && (
-        <div className="pagination">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                if (clientName || caseCategory || subType) {
-                  fetchFilteredClients(i);
-                } else {
-                  fetchAllClients(i);
-                }
-              }}
-              className={currentPage === i ? 'active' : ''}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="pagination">
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            className={i === currentPage ? 'active' : ''}
+            onClick={() => fetchClients(i)}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

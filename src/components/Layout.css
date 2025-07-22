@@ -1,0 +1,37 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.logo-bar {
+  background-color: #fdd76e;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 50px;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.tagline {
+  font-style: italic;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.footer {
+  background-color: #f2f2f2;
+  text-align: center;
+  padding: 15px;
+}

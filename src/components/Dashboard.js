@@ -26,27 +26,6 @@ function WelcomeDashboard({ username }) {
 
   return (
     <div className="WelcomeDashboard">
-      <header className="header">
-        <div class= "headercard">
-        {/* <h1 className="Title">Welcome to VBR & Associates</h1> */}
-        <p className='usernameclass'>{localStorage.getItem('Name')}</p>
-        <button type="button" class="button" onClick={handleLogout}> Log out
-        </button>
-        </div>  
-
-        <div class= "navcard">
-        <nav>
-          <a href="#about">About</a>
-          <a href="#features">Features</a>
-          <a href="#contact">Contact</a>
-    {
-        JSON.parse(localStorage.getItem('role') || '[]').includes('ADMIN') && (
-          <button onClick={goToClientScreen} className="button">Client Tab</button>
-        )
-      }
-        </nav>
-        </div>
-      </header>
 
       <main className="main-content">
         <section id="about">
@@ -71,10 +50,6 @@ function WelcomeDashboard({ username }) {
           <p>Feel free to reach out via email or follow me on social media.</p>
         </section>
       </main>
-
-      <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} VBR. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

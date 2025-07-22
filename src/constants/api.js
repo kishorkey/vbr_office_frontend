@@ -9,7 +9,6 @@ export const API = {
   VERIFY_USER: `${BASE_URL}/verifyUser?`,
   GET_ClientS: `${BASE_URL}/getClients?`,
   FILTER_CLIENTS:`${BASE_URL}/searchClient?`,
+    ADD_CLIENT: `${BASE_URL}/saveclientsDataWithCategory`,
    
- 
-  // Add more as needed...
 };

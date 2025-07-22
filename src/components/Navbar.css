@@ -1,0 +1,90 @@
+.navbar {
+  background: #fcd768;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 30px;
+  flex-wrap: wrap;
+}
+
+
+.navbar-left {
+  flex: 0 0 auto;
+}
+
+.vbr-logo {
+  height: 50px;
+}
+
+.navbar-center {
+  flex: 1;
+  text-align: center;
+}
+
+.vbr-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.vbr-subtitle {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.navbar-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 140px;
+  padding-right: 5px;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-btn {
+  background: black;
+  color: white;
+  border: none;
+  /* padding: 6px 12px; */
+  padding: 2px 12px;
+  cursor: pointer;
+}
+
+.navbar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+
+.navbar-links .active {
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.navbar-menu {
+  background-color:  #fcd768;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+}
