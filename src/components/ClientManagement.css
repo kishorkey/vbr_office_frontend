@@ -1,3 +1,5 @@
+/* ---------------- CSS FILE: ClientManagement.css ---------------- */
+
 /* Page Title */
 .page-title {
   text-align: center;
@@ -51,13 +53,14 @@
   gap: 15px;
   flex-wrap: wrap;
   margin-bottom: 30px;
+  margin-top: 5px;
   padding: 0 10px;
 }
 
 .filter-section input,
 .filter-section select {
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: 26px;
   border: 1px solid #aaa;
   font-size: 15px;
   min-width: 180px;
@@ -68,7 +71,7 @@
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 26px;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -103,29 +106,33 @@
   margin-top: 10px;
 }
 
-/* File Item Row */
-.file-item {
+.file-item,
+.file-item-modal {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  background-color: #f2f2f2;
+  padding: 8px 12px;
+  border-radius: 26px;
   margin-bottom: 8px;
   font-size: 14px;
+  width: 100%;
 }
 
 /* Download Button Styling */
 .download-btn {
-  background-color: #28a745;
+  background-color: #007bff;
   color: white;
   border: none;
   padding: 6px 14px;
-  border-radius: 6px;
+  border-radius: 26px;
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.3s ease;
 }
 
 .download-btn:hover {
-  background-color: #1e7e34;
+  background-color: #ff0000e1;
 }
 
 /* Pagination */
@@ -150,14 +157,15 @@
   font-weight: bold;
 }
 
-/* Modal */
+/* Modal Overlay */
 .edit-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -165,15 +173,19 @@
 }
 
 .modal-content {
-  background: #fff;
-  padding: 25px;
-  border-radius: 10px;
+  background-color: #ad8c2be6 !important;
+  color: #000;
+  padding: 30px;
+  border-radius: 25px !important; /* 👈 More curved */
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
 }
 
-.modal-content h2 {
+
+.modal-content h2,
+.modal-content h4 {
+  color: white;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -183,41 +195,37 @@
   width: 100%;
   padding: 10px 14px;
   margin-bottom: 15px;
-  border-radius: 8px;
+  border-radius: 999px;  /* 👈 Fully rounded pill shape */
   border: 1px solid #aaa;
+  background-color: #fff;
+  color: #000;
   font-size: 15px;
 }
+/* Delete file icon */
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-.modal-content .modal-actions {
+.modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 15px;
 }
 
-.modal-content .modal-actions button {
-  padding: 8px 16px;
+.modal-actions button {
+  padding: 10px 20px;
   border-radius: 6px;
   font-weight: bold;
-  border: none;
   cursor: pointer;
+  font-size: 15px;
+  border: none;
 }
 
-.modal-content .modal-actions .save-btn {
+.modal-actions .save-btn,
+.modal-actions .cancel-btn {
   background-color: #007bff;
   color: white;
-}
-
-.modal-content .modal-actions .cancel-btn {
-  background-color: #ccc;
-}
-
-/* Tabs - in case you reuse them */
-.tabs {
-  flex-wrap: wrap;
-}
-
-/* Container padding */
-.client-management,
-.add-client-form {
-  margin-top: 30px;
 }

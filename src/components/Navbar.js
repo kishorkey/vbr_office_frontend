@@ -38,7 +38,7 @@ function Navbar() {
         <a href="/#about">About</a>
         {role.includes('ADMIN') && (
           <>
-            <Link to="/clients" className={isClientManagement && location.pathname === '/clients' ? 'active' : ''}>
+            <Link to="/clients/Manage" className={isClientManagement && location.pathname === '/clients/Manage' ? 'active' : ''}>
               Manage Clients
             </Link>
             <Link to="/clients/add" className={isClientManagement && location.pathname === '/clients/add' ? 'active' : ''}>

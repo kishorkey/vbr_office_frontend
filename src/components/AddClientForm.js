@@ -8,18 +8,31 @@ function AddClientForm() {
   const [form, setForm] = useState({ username: '', mobile: '', categoryId: '', subTypeId: '' });
   const [files, setFiles] = useState([]);
 
-  const categoryMap = {
-    'Civil': 1, 'Criminal': 2, 'Corporate': 3, 'Constitutional': 4,
-    'Labor': 5, 'Tax': 6, 'Environmental': 7, 'Others': 8
+  const caseTypes = {
+    Civil: ['Property Disputes', 'Contract Disputes', 'Family Law', 'Consumer Protection'],
+    Criminal: ['Theft', 'Assault', 'Fraud', 'Murder'],
+    Corporate: ['Mergers & Acquisitions', 'Intellectual Property', 'Compliance'],
+    Constitutional: ['Fundamental Rights', 'Writ Petitions'],
+    Labor: ['Wage Disputes', 'Wrongful Termination'],
+    Tax: ['Income Tax', 'GST'],
+    Environmental: ['Pollution Control', 'Forest Rights'],
+    Others: ['Cyber Law', 'Education Law', 'Banking Law']
   };
 
-  const subTypeMap = {
-    'Property Disputes': 1, 'Contract Disputes': 2, 'Family Law': 3, 'Consumer Protection': 4,
-    'Theft': 5, 'Assault': 6, 'Fraud': 7, 'Murder': 8, 'Mergers & Acquisitions': 9,
-    'Intellectual Property': 10, 'Compliance': 11, 'Fundamental Rights': 12, 'Writ Petitions': 13,
-    'Wage Disputes': 14, 'Wrongful Termination': 15, 'Income Tax': 16, 'GST': 17,
-    'Pollution Control': 18, 'Forest Rights': 19, 'Cyber Law': 20, 'Education Law': 21, 'Banking Law': 22
-  };
+  // Generate category ID based on its index (starting from 1)
+  const categoryIdMap = Object.keys(caseTypes).reduce((acc, cat, idx) => {
+    acc[cat] = idx + 1;
+    return acc;
+  }, {});
+
+  // Generate subType ID map
+  let subTypeId = 1;
+  const subTypeIdMap = {};
+  Object.entries(caseTypes).forEach(([category, subTypes]) => {
+    subTypes.forEach(sub => {
+      subTypeIdMap[sub] = subTypeId++;
+    });
+  });
 
   const handleFileChange = (e) => setFiles([...e.target.files]);
 
@@ -29,8 +42,8 @@ function AddClientForm() {
     const dto = {
       username: form.username,
       mobile: form.mobile,
-      categoryId: categoryMap[form.categoryId],
-      subTypeId: subTypeMap[form.subTypeId]
+      categoryId: categoryIdMap[form.categoryId],
+      subTypeId: subTypeIdMap[form.subTypeId]
     };
 
     const formData = new FormData();
@@ -79,7 +92,7 @@ function AddClientForm() {
         required
       >
         <option value="">-- Select Category --</option>
-        {Object.keys(categoryMap).map(cat => (
+        {Object.keys(caseTypes).map(cat => (
           <option key={cat} value={cat}>{cat}</option>
         ))}
       </select>
@@ -91,11 +104,9 @@ function AddClientForm() {
           required
         >
           <option value="">-- Select Sub-Type --</option>
-          {Object.keys(subTypeMap)
-            .filter(sub => subTypeMap[sub].toString().startsWith(categoryMap[form.categoryId]))
-            .map(sub => (
-              <option key={sub} value={sub}>{sub}</option>
-            ))}
+          {caseTypes[form.categoryId].map(sub => (
+            <option key={sub} value={sub}>{sub}</option>
+          ))}
         </select>
       )}
 
